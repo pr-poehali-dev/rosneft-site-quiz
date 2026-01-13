@@ -25,6 +25,8 @@ type QuizTabProps = {
   score: number;
   onAnswer: (index: number) => void;
   onRestart: () => void;
+  onBackToMenu: () => void;
+  quizTitle?: string;
 };
 
 export default function QuizTab({ 
@@ -34,7 +36,9 @@ export default function QuizTab({
   showResult, 
   score, 
   onAnswer, 
-  onRestart 
+  onRestart,
+  onBackToMenu,
+  quizTitle 
 }: QuizTabProps) {
   if (showResult) {
     return (
@@ -56,10 +60,16 @@ export default function QuizTab({
               {Math.round((score / (questions.length * 100)) * 100)}% правильных ответов
             </p>
           </div>
-          <Button onClick={onRestart} className="w-full bg-primary hover:bg-primary/90 text-secondary font-semibold">
-            <Icon name="RotateCw" size={18} className="mr-2" />
-            Пройти снова
-          </Button>
+          <div className="flex gap-3">
+            <Button onClick={onBackToMenu} variant="outline" className="flex-1 border-primary/20 hover:bg-primary/10">
+              <Icon name="ArrowLeft" size={18} className="mr-2" />
+              К списку викторин
+            </Button>
+            <Button onClick={onRestart} className="flex-1 bg-primary hover:bg-primary/90 text-secondary font-semibold">
+              <Icon name="RotateCw" size={18} className="mr-2" />
+              Пройти снова
+            </Button>
+          </div>
         </CardContent>
       </Card>
     );
@@ -68,9 +78,26 @@ export default function QuizTab({
   const question = questions[currentQuestion];
 
   return (
-    <Card className="max-w-3xl mx-auto border-primary/20">
-      <CardHeader>
-        <div className="flex items-center justify-between mb-4">
+    <div className="space-y-4">
+      <Button 
+        variant="ghost" 
+        onClick={onBackToMenu}
+        className="text-primary hover:text-primary hover:bg-primary/10"
+      >
+        <Icon name="ArrowLeft" size={18} className="mr-2" />
+        К списку викторин
+      </Button>
+      
+      <Card className="max-w-3xl mx-auto border-primary/20">
+        <CardHeader>
+          {quizTitle && (
+            <div className="mb-3">
+              <Badge variant="outline" className="border-primary/30 text-primary text-sm">
+                {quizTitle}
+              </Badge>
+            </div>
+          )}
+          <div className="flex items-center justify-between mb-4">
           <Badge variant="outline" className="border-primary text-primary">
             Вопрос {currentQuestion + 1} из {questions.length}
           </Badge>
@@ -142,5 +169,6 @@ export default function QuizTab({
         </Dialog>
       </CardContent>
     </Card>
+    </div>
   );
 }
